@@ -56,14 +56,16 @@ class TwitterLitte extends Plugin
 	{
 		if ( $block->search != '' ) {
 			$url = 'http://search.twitter.com/search.json?';
+			// keep old search url as new search url dont work? see https://dev.twitter.com/docs/api/1.1/get/search/tweets
 			$url .= http_build_query( array(
-				'from' => $block->username,
-				'phrase' => $block->search,
-				'rpp' => $block->limit
+				'q' => $block->search, // required
+				'count' => $block->limit // formerly "rpp" parameter in old Search API
+			// TODO filter on username
 				), '', '&' );
 		}
 		else {
-			$url = 'http://twitter.com/statuses/user_timeline/' . $block->username . '.json';
+			// 2012-10-12 API 1.1 url:
+			$url = 'http://api.twitter.com/1/statuses/user_timeline.json?screen_name=' . $block->username;
 		}
 
 		return $url;
